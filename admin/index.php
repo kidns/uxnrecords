@@ -47,7 +47,7 @@ if($ss->isLogin()==false){
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="?tab=users">
+                            <a class="nav-link" id="users" href="?tab=users">
                                 <span data-feather="file-text"></span>
                                 Manage Users
                             </a>
@@ -89,10 +89,15 @@ if($ss->isLogin()==false){
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
                 <?php
+
                 $tab = trim(addslashes(htmlspecialchars($_GET['tab'])));
-                if($tab==="users"){
-                    include_once 'users/managerUsers.php';
-                }
+
+                    if($tab==="users"){
+                        include_once 'users/managerUsers.php';
+                        echo ' <script>$("#users").addClass("active");</script>';
+                    }
+
+
                 ?>
                 </div>
 
@@ -100,8 +105,10 @@ if($ss->isLogin()==false){
                 </div>
             </main>
         </div>
+
     </body>
     <?php
+    include 'users/add.php';
         }
     include 'footer.php';
     ?>

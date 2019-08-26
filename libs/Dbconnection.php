@@ -105,6 +105,7 @@ class apps_libs_Dbconnection{
 
     public function insert(){
         $sql = "insert  into ".$this->tableName." ".$this->queryParams["field"];
+
         $result = $this->query($sql,$this->queryParams["value"]);
         if($result){
             return $this->connect()->lastInsertId();
