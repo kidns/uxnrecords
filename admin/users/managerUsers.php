@@ -1,44 +1,110 @@
 
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/UXN/apps/autoLoad.php";
-$ss = new apps_libs_UserIdentity();
-$route = new apps_libs_Route();
+include_once $_SERVER["DOCUMENT_ROOT"]."../UXN/apps/autoLoad.php";
 
 
-if($ss->isLogin()==false){
 
 
-}else{
+
+class apps_admin_users_managerUsers extends  apps_libs_Handling {
 
 
-$a = new apps_admin_users_members();
-$query = $a ->buildQueryParams(['select' => '*'])->select();
+
+
+
+
+}
+
+$test = new apps_libs_Handling();
+$query = $test->loading("members","limit",9,"managerUsers.php");
+$result = json_decode($query,true);
+
+
+    include_once "../header.php";
+
 
 ?>
-<div class="container-fluid">
+<div class="container-fluid ml-0 mr-0 pl-0 pr-0">
+    <div class="table-responsive">
 
-    <table class="table">
-        <thead class="thead-dark">
-        <tr class="text-center">
-            <th scope="col">NAME</th>
-            <th scope="col">PASSWORD</th>
-            <th scope="col"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">ADD</button></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($query as $row) {
 
-         ?>
-        <tr class="text-center">
-            <td><?php echo $row["username"]?></td>
-            <td><?php echo $row["password"]?></td>
-        </tr>
+        <table class="table table-hover table-striped table-bordered" cellpadding="0" width="100%" id="pagingnation-test">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">NAME</th>
+                <th scope="col">PASSWORD</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">POSITION</th>
+                <th class="text-center" scope="col"><i class="fas fa-user-plus" data-toggle="modal" data-target="#addUsers"></i></th>
+            </tr>
+            </thead>
+            <tbody id="list">
+            <?php foreach ($result as $key => $row) {
 
-        <?php
-        }?>
-        </tbody>
-    </table>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                ?>
+                <tr>
+                    <td><?php echo $row["username"]?></td>
+                    <td><?php echo $row["password"]?></td>
+                    <td><?php echo $row["email"]?></td>
+                    <td><?php echo $row["level"]?></td>
+
+                    <!--            <td><ul class="justify-content-between">-->
+                    <!--                    <i class="fas fa-user-edit fa" style="font-size: 20px; color: #4B515D" data-toggle="modal" data-target="#--><?php //echo $row['username']?><!--"></i>-->
+                    <!--                    <i class="fas fa-backspace ml-5" style="font-size: 20px; color:#3F729B"></i>-->
+                    <!--            </ul></td>-->
+                </tr>
+                <!--            DIA LOG UPDATE-->
+                <div class="modal fade" id="<?php echo $row['username']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">UPDATE USER</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">User name:</label>
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="<?php echo $row['username'] ?>" disabled>
+
+                                        <label for="recipient-name" class="col-form-label">Password:</label>
+                                        <input type="password" class="form-control" id="password" name="password">
+
+                                        <label for="recipient-name" class="col-form-label">Confirm password:</label>
+                                        <input type="password" class="form-control" id="confirm-password" name="confirm-password">
+
+                                        <label for="recipient-name" class="col-form-label">Email:</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="<?php echo $row['email']?>">
+
+                                        <div class="form-check mt-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                Administration
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                        <button type="submit" class="btn btn-primary" name="submit">UPDATE</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }?>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <!-- DIALOG ADD USER-->
+    <div class="modal fade" id="addUsers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -52,8 +118,13 @@ $query = $a ->buildQueryParams(['select' => '*'])->select();
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">User name:</label>
                             <input type="text" class="form-control" id="username" name="username">
+
                             <label for="recipient-name" class="col-form-label">Password:</label>
                             <input type="password" class="form-control" id="password" name="password">
+
+                            <label for="recipient-name" class="col-form-label">Email</label>
+                            <input type="email" class="form-control" id="password" name="email">
+
                             <div class="form-check mt-3">
                                 <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                                 <label class="form-check-label" for="defaultCheck1">
@@ -71,11 +142,24 @@ $query = $a ->buildQueryParams(['select' => '*'])->select();
             </div>
         </div>
     </div>
-</div>
+   <div class="container" id="content">
+       <div class="div-page" id="div-page">
+
+        <?php echo   $paging->html(); ?>
+
+       </div>
+
+   </div>
+
+    </div>
+
+
+
 
 <?php
 
-}
+
+include_once "../footer.php";
 ?>
 
 
@@ -96,10 +180,6 @@ $query = $a ->buildQueryParams(['select' => '*'])->select();
 
 
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</body>
-</html>
+
+
+

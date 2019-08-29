@@ -1,9 +1,10 @@
 <?php
 
-include 'header.php';
-
-include '../autoLoad.php';
+include_once 'header.php';
+include_once '../autoLoad.php';
 $ss = new apps_libs_UserIdentity();
+$addUser = new apps_libs_Handling();
+$addUser->add("members");
 $route = new apps_libs_Route(__DIR__);
 if($ss->isLogin()==false){
     $route->Redirect('login.php');
@@ -14,7 +15,7 @@ if($ss->isLogin()==false){
 
     <link href="../media/boostrap/css/dashboard.css" rel="stylesheet">
 
-    <body>
+    <body class="p-0 mx-auto">
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
@@ -87,8 +88,10 @@ if($ss->isLogin()==false){
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom">
                 <?php
+
+                $route->getGET("tab");
 
                 $tab = trim(addslashes(htmlspecialchars($_GET['tab'])));
 
@@ -104,11 +107,18 @@ if($ss->isLogin()==false){
 
                 </div>
             </main>
+
+        <?php
+            $page = 0;
+
+        ?>
+
         </div>
+
 
     </body>
     <?php
-    include 'users/add.php';
+
         }
-    include 'footer.php';
+    include_once 'footer.php';
     ?>

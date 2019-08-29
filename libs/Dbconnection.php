@@ -5,17 +5,16 @@
  * @author Thanh depzai
  * @date now
  */
-class apps_libs_Dbconnection{
+class apps_libs_Dbconnection
+{
 
-    protected $usename="root";
-    protected $password="";
-    protected $host="localhost";
-    protected $database="uxntv";
+    protected $usename = "root";
+    protected $password = "";
+    protected $host = "localhost";
+    protected $database = "uxntv";
     protected $queryParams = [];
-
-    protected $tableName;
-    protected  static  $connectionInstance = null;
-
+    protected $tablename;
+    protected static $connectionInstance = null;
 
 
     public function __construct()
@@ -28,19 +27,20 @@ class apps_libs_Dbconnection{
     /***
      * @return null|PDO
      */
-    public function connect(){
+    public function connect()
+    {
 
-        if(self::$connectionInstance === null){
-          try{
-              self::$connectionInstance = new PDO('mysql:host='.$this->host.';dbname='.$this->database,$this->usename,$this->password);
-              self::$connectionInstance->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+        if (self::$connectionInstance === null) {
+            try {
+                self::$connectionInstance = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->usename, $this->password);
+                self::$connectionInstance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-          } catch (Exception $ex) {
-              echo "ERROR".$ex->getMessage();
-              die();
+            } catch (Exception $ex) {
+                echo "ERROR" . $ex->getMessage();
+                die();
 
 
-          }
+            }
         }
 
         return self::$connectionInstance;
@@ -48,54 +48,67 @@ class apps_libs_Dbconnection{
     }
 
 
-    public function query($sql,$param = [] ){
-       $q = $this->connect()->prepare($sql);
-        if (is_array($param) && $param){
+    public function query($sql, $param = [])
+    {
+        $q = $this->connect()->prepare($sql);
+        if (is_array($param) && $param) {
             $q->execute($param);
 
 
-        } else
-        {
+        } else {
             $q->execute();
         }
         return $q;
     }
-    public function buildQueryParams($params){
+
+    public function buildQueryParams($params)
+    {
         $default = [
-          "select"=>"*",
-          "where"=>"",
-          "other"=>"",
-          "params"=>"",
-          "field"=>"",
-          "value"=>[]
+            "where"=>"",
+            "select" => "*",
+            "table" => "",
+            "row" => "",
+            "other" => "",
+            "params" => "",
+            "field" => "",
+            "value" => [],
+            "limit"=>"",
+            "space"=>""
 
         ];
-        $this->queryParams = array_merge($default,$params);
+        $this->queryParams = array_merge($default, $params);
         return $this;
 
 
     }
-    public function buildCondition($condition){
-        if(trim($condition)){
-            return "where ".$condition;
+
+    public function buildCondition($condition)
+    {
+        if (trim($condition)) {
+            return "where" . $condition;
         }
         return "";
     }
 
-    public function select(){
-        $sql = "select ".$this->queryParams["select"]." from ".$this->tableName." ".$this->buildCondition($this->queryParams["where"])." ".$this->queryParams["other"];
-        $query = $this->query($sql,$this->queryParams["params"]);
-        $show =  $query->fetchAll(PDO::FETCH_ASSOC);
+    public function select($start,$limit)
+    {
+
+        $sql = "select " . $this->queryParams["select"] . " from " .$this->tablename.$this->queryParams["table"] ." ".$this->buildCondition($this->queryParams["where"])." ". $this->queryParams["other"] ." ".
+            $this->queryParams["limit"].$start.$this->queryParams["space"].$limit;
+        $query = $this->query($sql, $this->queryParams["params"]);
+        $show = $query->fetchAll(PDO::FETCH_ASSOC);
+
         return $show;
 
 
-
-
     }
-    public function selectOne(){
-        $this->queryParams["other"] = "limit 1";
-        $data = $this->select();
-        if($data){
+
+    public function selectOne()
+    {   $start ="";
+        $limit ="";
+        $this->queryParams["limit"] = "limit 1";
+        $data = $this->select($start,$limit);
+        if ($data) {
             return $data[0];
         }
         return [];
@@ -103,13 +116,16 @@ class apps_libs_Dbconnection{
     }
 
 
-    public function insert(){
-        $sql = "insert  into ".$this->tableName." ".$this->queryParams["field"];
+    public function insert()
+    {
+        $sql = "insert  into " . $this->queryParams["table"] . " " . $this->queryParams["field"];
 
-        $result = $this->query($sql,$this->queryParams["value"]);
-        if($result){
+        $result = $this->query($sql, $this->queryParams["value"]);
+        if ($result) {
+            echo "<script>alert('them thanh cong')</script>";
             return $this->connect()->lastInsertId();
-        }else{
+        } else {
+            echo "<script>alert('them thanh cong')</script>";
             return false;
         }
 
@@ -120,9 +136,10 @@ class apps_libs_Dbconnection{
      * UPDATE FUNCTION
      */
 
-    public  function update(){
-        $sql = "update ".$this->tableName." set ".$this->queryParams["value"]." ".
-            $this->buildCondition($this->queryParams["where"])." ".$this->queryParams["other"];
+    public function update()
+    {
+        $sql = "update " . $this->tableName . " set " . $this->queryParams["value"] . " " .
+            $this->buildCondition($this->queryParams["where"]) . " " . $this->queryParams["other"];
         return $this->query($sql);
     }
 
@@ -130,13 +147,13 @@ class apps_libs_Dbconnection{
     /**
      * DELETE FUNCTION
      */
-    public function delete(){
-        $sql = "delete from ".$this->tableName." ".$this->buildCondition($this->queryParams["where"])." ".$this->queryParams["other"];
+    public function delete()
+    {
+        $sql = "delete from " . $this->tableName . " " . $this->buildCondition($this->queryParams["where"]) . " " . $this->queryParams["other"];
         return $this->query($sql);
 
 
     }
-
 
 
 }

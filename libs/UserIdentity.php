@@ -31,7 +31,7 @@ class apps_libs_UserIdentity{
     public function login(){
         $db = new apps_admin_users_members();
         $quenry_check = $db->buildQueryParams([
-           "where" => "username =:username AND password =:password",
+           "where" => " username =:username AND password =:password",
            "params" => [
                ":username" =>trim($this->username),
                ":password" =>$this->encryptPassword($this->password)
