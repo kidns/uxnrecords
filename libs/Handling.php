@@ -13,7 +13,8 @@ class apps_libs_Handling extends apps_libs_Dbconnection
 
 
     public function loading($table, $other, $limit,$tab)
-    {    $route = new apps_libs_Route();
+    {
+        $route = new apps_libs_Route();
         $ss = new apps_libs_UserIdentity();
         if($ss->isLogin()==false){
 
@@ -25,7 +26,7 @@ class apps_libs_Handling extends apps_libs_Dbconnection
             $count_all_rows = $this->query("SELECT * FROM " . $table)->rowCount();
 
             $config = array(
-                'current_page' => $route->getGET("page"),
+                'current_page' => ($route->getGET("page")==$tab) ? $route->getGET("page")== 1 : $route ->getGET("page"),
                 'total_record' => $count_all_rows,
                 'limit' => $limit,
                 'link_full' => $tab."?page={page}",
@@ -72,6 +73,10 @@ class apps_libs_Handling extends apps_libs_Dbconnection
 
 
 
+
+
+
+
     public function add($table)
     {
         $route = new apps_libs_Route();
@@ -95,10 +100,20 @@ class apps_libs_Handling extends apps_libs_Dbconnection
     }
 
 
-    public function update()
-    {
+    public function updateVer($table,$where)
+        {
+            $route = new apps_libs_Route();
+            $row = $route->getGET("customUpdate");
 
-    }
+                $query_update =$this->query("SELECT * FROM ".$table. " WHERE ".$where. " = '".$row."'")->fetchAll();
+
+                return json_encode($query_update);
+
+
+
+
+
+        }
 }
 
 

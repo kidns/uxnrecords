@@ -1,4 +1,5 @@
 
+
 <?php
 include_once $_SERVER["DOCUMENT_ROOT"]."../UXN/apps/autoLoad.php";
 
@@ -19,8 +20,10 @@ $test = new apps_libs_Handling();
 $query = $test->loading("members","limit",9,"managerUsers.php");
 $result = json_decode($query,true);
 
+include_once "../header.php";
 
-    include_once "../header.php";
+
+
 
 
 ?>
@@ -31,11 +34,11 @@ $result = json_decode($query,true);
         <table class="table table-hover table-striped table-bordered" cellpadding="0" width="100%" id="pagingnation-test">
             <thead class="thead-dark">
             <tr>
-                <th scope="col">NAME</th>
-                <th scope="col">PASSWORD</th>
-                <th scope="col">EMAIL</th>
-                <th scope="col">POSITION</th>
-                <th class="text-center" scope="col"><i class="fas fa-user-plus" data-toggle="modal" data-target="#addUsers"></i></th>
+                <th style="width: 30%" scope="col">NAME</th>
+                <th style="width: 30%" scope="col">PASSWORD</th>
+                <th style="width: 20%" scope="col">EMAIL</th>
+                <th style="width: 10%" scope="col">POSITION</th>
+                <th style="width: 10%" class="text-center" scope="col"><i class="fas fa-user-plus" data-toggle="modal" data-target="#addUsers"> </i></th>
             </tr>
             </thead>
             <tbody id="list">
@@ -47,54 +50,9 @@ $result = json_decode($query,true);
                     <td><?php echo $row["password"]?></td>
                     <td><?php echo $row["email"]?></td>
                     <td><?php echo $row["level"]?></td>
-
-                    <!--            <td><ul class="justify-content-between">-->
-                    <!--                    <i class="fas fa-user-edit fa" style="font-size: 20px; color: #4B515D" data-toggle="modal" data-target="#--><?php //echo $row['username']?><!--"></i>-->
-                    <!--                    <i class="fas fa-backspace ml-5" style="font-size: 20px; color:#3F729B"></i>-->
-                    <!--            </ul></td>-->
+                    <td class="text-center"><i id="<?php echo $row['username']?>" class="fas fa-edit mr-3" data-toggle="modal" data-target="#update" onclick="showUpdate(this)"></i><i class="fas fa-backspace ml-3"></i></td>
                 </tr>
-                <!--            DIA LOG UPDATE-->
-                <div class="modal fade" id="<?php echo $row['username']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">UPDATE USER</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">User name:</label>
-                                        <input type="text" class="form-control" id="username" name="username" placeholder="<?php echo $row['username'] ?>" disabled>
 
-                                        <label for="recipient-name" class="col-form-label">Password:</label>
-                                        <input type="password" class="form-control" id="password" name="password">
-
-                                        <label for="recipient-name" class="col-form-label">Confirm password:</label>
-                                        <input type="password" class="form-control" id="confirm-password" name="confirm-password">
-
-                                        <label for="recipient-name" class="col-form-label">Email:</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="<?php echo $row['email']?>">
-
-                                        <div class="form-check mt-3">
-                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                            <label class="form-check-label" for="defaultCheck1">
-                                                Administration
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
-                                        <button type="submit" class="btn btn-primary" name="submit">UPDATE</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
                 <?php
             }?>
             </tbody>
@@ -104,7 +62,7 @@ $result = json_decode($query,true);
     </div>
 
     <!-- DIALOG ADD USER-->
-    <div class="modal fade" id="addUsers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addUsers" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -133,7 +91,6 @@ $result = json_decode($query,true);
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
                             <button type="submit" class="btn btn-primary" name="submit">ADD</button>
                         </div>
                     </form>
@@ -142,6 +99,48 @@ $result = json_decode($query,true);
             </div>
         </div>
     </div>
+    <!--  DIALOG UPDATE-->
+    <div class="modal fade" id="update" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">UPDATE USER</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">User name:</label>
+                            <input  type="text" class="form-control" id="userUpdate" placeholder="username" name="username" disabled>
+
+                            <label for="recipient-name" class="col-form-label">Password:</label>
+                            <input type="password" class="form-control" id="pwdUpdate" name="password">
+
+                            <label for="recipient-name" class="col-form-label">Email:</label>
+                            <input type="email" class="form-control" id="emailUpdate" name="email">
+
+                            <div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Administration
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" name="submit">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
    <div class="container" id="content">
        <div class="div-page" id="div-page">
 
@@ -152,7 +151,9 @@ $result = json_decode($query,true);
    </div>
 
     </div>
+    <script>
 
+    </script>
 
 
 
