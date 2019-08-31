@@ -35,9 +35,10 @@ class apps_libs_UserIdentity{
            "params" => [
                ":username" =>trim($this->username),
                ":password" =>$this->encryptPassword($this->password)
-           ]
+           ]])->selectOne();
 
-        ])->selectOne();
+
+
 
 
         if ($quenry_check){

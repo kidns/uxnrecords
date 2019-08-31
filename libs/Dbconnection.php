@@ -85,7 +85,7 @@ class apps_libs_Dbconnection
     public function buildCondition($condition)
     {
         if (trim($condition)) {
-            return "where" . $condition;
+            return "where " . $condition;
         }
         return "";
     }
@@ -147,9 +147,10 @@ class apps_libs_Dbconnection
     /**
      * DELETE FUNCTION
      */
-    public function delete()
+    public function delete($tableDelete)
     {
-        $sql = "delete from " . $this->tableName . " " . $this->buildCondition($this->queryParams["where"]) . " " . $this->queryParams["other"];
+        $sql = "DELETE FROM " . $tableDelete . " " . $this->buildCondition($this->queryParams["where"]) . " = '" . $this->queryParams["other"]."'";
+
         return $this->query($sql);
 
 
