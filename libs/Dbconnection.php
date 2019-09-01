@@ -121,11 +121,11 @@ class apps_libs_Dbconnection
         $sql = "insert  into " . $this->queryParams["table"] . " " . $this->queryParams["field"];
 
         $result = $this->query($sql, $this->queryParams["value"]);
+
         if ($result) {
-            echo "<script>alert('them thanh cong')</script>";
-            return $this->connect()->lastInsertId();
+            $id = $this->connect()->lastInsertId();
+            return $id;
         } else {
-            echo "<script>alert('them thanh cong')</script>";
             return false;
         }
 

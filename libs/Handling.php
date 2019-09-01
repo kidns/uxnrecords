@@ -16,7 +16,6 @@
         {
 
             $route = new apps_libs_Route();
-            $ss = new apps_libs_UserIdentity();
 
             global $paging;
             global $start;
@@ -127,7 +126,7 @@
 
         }
 
-        public function addRecords($table){
+        public function addReg($table){
             $route = new apps_libs_Route();
             $user =  $route->getPOST("username");
             $password = $route->getPOST("password");
@@ -138,17 +137,18 @@
                     "username" =>'',
                     "email" => ''
             );
-            $query_check_username = $this->query("SELECT * FROM " +$table + " WHERE username = '" + $user +"'") ->rowCount();
-            $query_check_email = $this->query("SELECT * FROM " +$table + " WHERE email = '" + $email +"'") ->rowCount();
+            $query_check_username = $this->query("SELECT * FROM ".$table." WHERE username ='" .$user ."'")->rowCount();
+
+            $query_check_email = $this->query("SELECT * FROM " .$table . " WHERE email = '" . $email ."'") ->rowCount();
             if ($query_check_username>0){
 
                 $error['username'] = "The username is not available";
 
-            }else if ($query_check_email){
+            }else if ($query_check_email>0){
                 $error['email'] = "The email is not available";
             }else {
 
-                $query_add =  $this->buildQueryParams(
+                    $query_add =  $this->buildQueryParams(
 
                     ["table" => $table,
                         "field" => "(username, password,email) value (?,?,?)",
@@ -157,7 +157,6 @@
                     ]
 
                 )->insert();
-
                 if ($query_add){
                     $error['success'] = "successfully!";
                 }

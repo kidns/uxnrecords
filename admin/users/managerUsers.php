@@ -18,7 +18,6 @@ if($ss->isLogin()==false){
 
     $test = new apps_libs_Handling();
     $query = $test->loading("members", "limit", 9, "managerUsers.php");
-    $test->add("members");
     include_once "../header.php";
 
 
@@ -73,7 +72,7 @@ if($ss->isLogin()==false){
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">ADD USER</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeReg">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -81,13 +80,15 @@ if($ss->isLogin()==false){
                         <form action="" method="post">
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">User name:</label>
-                                <input type="text" class="form-control" id="username" name="username">
+                                <input type="text" class="form-control" id="username" name="username" required="required"/>
 
                                 <label for="recipient-name" class="col-form-label">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password">
+                                <input type="password" class="form-control" id="password" name="password" required="required"/>
 
                                 <label for="recipient-name" class="col-form-label">Email</label>
-                                <input type="email" class="form-control" id="password" name="email">
+                                <input type="email" class="form-control" id="email" name="email" required="required"/>
+                                <br/>
+                                <span id="notifi"></span>
 
                                 <div class="form-check mt-3">
                                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
@@ -97,7 +98,7 @@ if($ss->isLogin()==false){
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" name="submit">ADD</button>
+                               <input class="btn btn-success" type="button" onclick="addRegister();" value="REGISTER"/>
                             </div>
                         </form>
                     </div>

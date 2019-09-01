@@ -13,5 +13,5 @@ class apps_admin_users_addUsers extends apps_libs_Handling{
  *
  *
  */
-$delete = new apps_libs_Handling();
-$delete->deleteRecord("members","username");
+$addRegs = new apps_libs_Handling();
+$addRegs->addReg("members");

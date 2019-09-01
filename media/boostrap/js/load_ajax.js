@@ -1,13 +1,26 @@
 /****
  * @author thanh depzai
- * @return table + pagination
- *
+ * @return load data + pagination
+ *hàm bên dưới có chức năng gọi data và set pagination cho managerUser.php
+ * sẽ được gọi khi khởi động page
  *
  *
  */
 $(document).ready(function () {
     refresh();
 });
+
+
+/***
+ * hàm bên dưới có nhiệm vụ phân trang cho page
+ * khi click vào tag <a nó sẽ gửi request tới trang hiện tại là managerUsers
+ * tính toán và nhận lại kết quả ở dạng JSON
+ * khi có kết quả sẽ parse ra và thay  thế data vào #list
+ *
+ *
+ *
+ *
+ */
 
 $('#content').on('click', '#div-page a', function() {
 
@@ -62,7 +75,9 @@ $('#content').on('click', '#div-page a', function() {
 /***
  @author thanh dep zai
  *
- @return show info in forms
+ @return hàm này có nhiệm vụ show info hiện tại trước khi update
+ được gán vào placeholder cho người dùng nhìn để chỉnh sửa dễ dàng hơn
+ (chức năng chưa hoàn thiện)
  */
 
 
@@ -96,7 +111,10 @@ function showUpdate(i) {
 
 /***
 @author thanh dep zai
-* this below is a delete ajax funtion
+* hàm này có nhiệm vụ xóa users.
+ * khi set sự kiện onclick =  delete records nó sẽ show dialog confirm
+ * khi xác nhận xóa thì nó gửi post kèm id tới deleteUsẻ.php
+ * sau khi request gửi đi và sẽ trả về dạng text (sẽ fix sớm ở dạng json)
 *
 *
 * */
@@ -137,7 +155,120 @@ function deleteRecord(i) {
 
 }
 
+/***
+ *
+ * hàm bên dươi là hàm thêm users.
+ * check form + gửi request tới Users để trả về kết quả ở dạng json.
+ * chưa check được dạng email @......
+ *
+ * @return {boolean}
+ */
 
+function addRegister() {
+    var username = $('#username').val();
+    var email =  $('#email').val();
+    var pws = $('#password').val();
+    if($.trim(username)===''){
+
+        $('#notifi').text('Enter a valid username!');
+        $('#notifi').addClass('text-warning');
+        $('#username').addClass('border-danger');
+
+        return false;
+
+    }
+    else {
+        $('#username').removeClass('border-danger');
+        $('#notifi').text('');
+    }
+    if ($.trim(pws) === ''){
+
+        $('#notifi').text('Enter a valid password!');
+        $('#notifi').addClass('text-warning');
+        $('#password').addClass('border-danger');
+        return false;
+
+    }else {
+
+        $('#password').removeClass('border-danger');
+        $('#notifi').text('');
+    }
+    if ($.trim(email)===''){
+
+        $('#notifi').text('Enter a valid email!');
+        $('#notifi').addClass('text-warning');
+        $('#email').addClass('border-danger');
+        return false;
+    }else {
+        $('#email').removeClass('border-danger');
+        $('#notifi').text('');
+    }
+
+    $.ajax({
+        url:'addUsers.php',
+        type:'post',
+        dataType:'json',
+        data:{
+            "username" : username,
+            "password" :pws,
+            "email" :email
+        },
+        success:function (result) {
+
+         if($.trim(result['username'])!==""){
+
+             $('#notifi').text(result['username']);
+             $('#notifi').addClass('text-warning');
+             $('#email').addClass('border-danger');
+
+         }else if ($.trim(result['email']) !== "") {
+             $('#notifi').text(result['email']);
+             $('#notifi').addClass('text-warning');
+             $('#email').addClass('border-danger');
+
+
+         }else if ($.trim(result['success']!=="")){
+
+             $('#notifi').text(result['success']);
+             $('#notifi').addClass('text-info')
+             setTimeout(function () {
+                 $('#closeReg').click();
+                 refresh();
+             },7200);
+
+
+         }
+
+
+
+        }
+
+
+
+
+
+
+
+    });
+    return false;
+
+}
+
+/****
+ * khi click vào close  = id closeReg
+ * thì nó sẽ reset lại các giá trị của form trở về trạng thái ban đầu
+ * khi chúng ta không click close đóng dialog bằng cách trỏ chuột ngoài màn hình thì nó
+ * vẫn giữ nguyên thông tin đang nhập ở form (BUG = CHỨC NĂNG MỚI  :))
+ *
+ */
+$('#closeReg').click(function () {
+    console.log("vao day roi");
+    $('#notifi').html('');
+    $('#notifi').removeClass('border-danger');
+    $('#username').val('');
+    $('#password').val('');
+    $('#email').val('');
+})
 
 function refresh() {
     var url = $(window.location).attr('href');
