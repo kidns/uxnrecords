@@ -219,7 +219,7 @@ function addRegister() {
 
              $('#notifi').text(result['username']);
              $('#notifi').addClass('text-warning');
-             $('#email').addClass('border-danger');
+             $('#username').addClass('border-danger');
 
          }else if ($.trim(result['email']) !== "") {
              $('#notifi').text(result['email']);
@@ -270,6 +270,15 @@ $('#closeReg').click(function () {
     $('#email').val('');
 })
 
+/******
+ * Refresh()
+ * hàm này có chức năng refesh lại trang
+ * còn hơi gà ở giai đoạn này
+ *
+ *
+ *
+ * @return {boolean}
+ */
 function refresh() {
     var url = $(window.location).attr('href');
 
