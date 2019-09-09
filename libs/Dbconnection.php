@@ -52,13 +52,24 @@ class apps_libs_Dbconnection
     {
         $q = $this->connect()->prepare($sql);
         if (is_array($param) && $param) {
-            $q->execute($param);
+            ;
+            if ($q->execute($param)){
+                return $q;
+            }else{
+                return false;
+            }
 
 
         } else {
             $q->execute();
+            if ($q->execute()){
+                return $q;
+            }else{
+                return false;
+            }
         }
-        return $q;
+
+
     }
 
     public function buildQueryParams($params)
@@ -73,7 +84,8 @@ class apps_libs_Dbconnection
             "field" => "",
             "value" => [],
             "limit"=>"",
-            "space"=>""
+            "space"=>"",
+            "column"=>""
 
         ];
         $this->queryParams = array_merge($default, $params);
@@ -136,11 +148,24 @@ class apps_libs_Dbconnection
      * UPDATE FUNCTION
      */
 
-    public function update()
+    public function update($table)
     {
-        $sql = "update " . $this->tableName . " set " . $this->queryParams["value"] . " " .
-            $this->buildCondition($this->queryParams["where"]) . " " . $this->queryParams["other"];
-        return $this->query($sql);
+        $resultUpdate= [
+            "true" => '',
+            "false"=>''
+        ];
+        $sql = "update " . $table . " set " .$this->queryParams["column"]  . " " .
+            $this->buildCondition($this->queryParams["where"]);
+        $result = $this->query($sql,$this->queryParams["params"]);
+        if ($result==false){
+            $resultUpdate["false"].="Something went wrong!";
+
+        }else{
+            $resultUpdate["true"].="Successfully updated!";
+        }
+
+
+        return json_encode($resultUpdate);
     }
 
 
@@ -150,8 +175,12 @@ class apps_libs_Dbconnection
     public function delete($tableDelete)
     {
         $sql = "DELETE FROM " . $tableDelete . " " . $this->buildCondition($this->queryParams["where"]) . " = '" . $this->queryParams["other"]."'";
+        $this->query($sql);
+        $query_check = "SELECT * FROM ".$tableDelete." ".$this->buildCondition($this->queryParams['where'])." = '".$this->queryParams['other']."'";
+        $result = $this->query($query_check)->rowCount();
+       return $result;
 
-        return $this->query($sql);
+
 
 
     }

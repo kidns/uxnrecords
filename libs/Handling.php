@@ -88,18 +88,33 @@
 
         }
 
+        /*****
+         * @param $table
+         * @param $where
+         * @return string
+         *
+         * load info
+         *
+         */
 
-        public function updateVer($table, $where)
+        public function getInfo($table, $where)
         {
             $route = new apps_libs_Route();
-            $row = $route->getGET("customUpdate");
-
+            $row = $route->getPOST("getInfo");
             $query_update = $this->query("SELECT * FROM " . $table . " WHERE " . $where . " = '" . $row . "'")->fetchAll();
+            $info = json_encode($query_update);
+            if ($row!==null){
+                return $info;
+            }else{
 
-            return json_encode($query_update);
-
+                return '';
+            }
 
         }
+
+
+
+
 
         public function deleteRecord($table, $where)
         {
@@ -112,16 +127,19 @@
 
                 ]
             )->delete($table);
+            $result = array(
+                "true"=>"",
+                "false"=> ""
 
+            );
+          if ($query==0){
+              $result["true"]= " was deleted successfully";
 
-            if ($query) {
-                echo "true";
+          }else{
 
-            } else {
-                echo "false";
-
-
-            }
+              $result["false"]= "Something went wrong!";
+          }
+            die(json_encode($result));
 
 
         }
@@ -158,7 +176,7 @@
 
                 )->insert();
                 if ($query_add){
-                    $error['success'] = "successfully!";
+                    $error['success'] = "Successfully!";
                 }
 
 

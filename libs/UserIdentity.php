@@ -73,7 +73,7 @@ class apps_libs_UserIdentity{
 
     public function checkLogin(){
         if($this->isLogin()){
-            header("location:index.php");
+            header("location:users/managerUsers.php");
 
         }
     }

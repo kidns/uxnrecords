@@ -8,6 +8,7 @@
  */
 $(document).ready(function () {
     refresh();
+    closeDialog();
 });
 
 
@@ -39,11 +40,12 @@ $('#content').on('click', '#div-page a', function() {
                 // lặp qua danh sách thành viên và tạo html
                 $.each(result['query'], function (key, row) {
                     html += '<tr class="abx'+row["username"]+'">';
+                    html += '<td>' + row['id'] + '</td>';
                     html += '<td>' + row['username'] + '</td>';
                     html += '<td>' + row['password'] + '</td>';
                     html += '<td>' + row['email'] + '</td>';
-                    html += '<td>' + row['level'] + '</td>';
-                    html += '<td class="text-center"><i class=\"fas fa-edit mr-3" id="' + row['username'] + '" data-toggle="modal" data-target="#update" onclick="showUpdate(this);" "></i>' +
+                    html += '<td class="text-center">' + row['level'] + '</td>';
+                    html += '<td class="text-center"><i class=\"fas fa-edit mr-3 update" id="'+ row['username']+ '" data-toggle="modal" data-target="#update" onclick="showUpdate(this);" "></i>' +
                         '<i class="fas fa-backspace ml-3" id="'+row['username']+'" data-toggle="modal" data-target="#deleteUsers" onclick="deleteRecord(this);" ></i></td>';
 
                 });
@@ -84,30 +86,78 @@ $('#content').on('click', '#div-page a', function() {
 
 function showUpdate(i) {
     var customUpdate = i.id;
+
+
     $.ajax({
-            url: 'updateUsers.php',
-            type: "get",
-            dataType: "json",
-            data: {"customUpdate": customUpdate},
+        url: 'updateUsers.php',
+        type: "post",
+        dataType: "json",
+        data: {"getInfo": customUpdate},
 
-            success: function (result) {
+        success: function (result) {
+            $.each(result,function (key,row) {
+                $('#userUpdate').attr("placeholder", row["username"]);
+                $('#pwdUpdate').attr("placeholder", row["password"]);
+                $('#emailUpdate').attr("placeholder", row["email"]);
+                $('#bntUpdate').click(function () {
+                    var id = row['id'];
+                    var password = $('#pwdUpdate').val();
+                    var email = $('#emailUpdate').val();
+                    var bntUpdate = $('#bntUpdate').val();
+                    $.ajax({
+                        url:'updateUsers.php',
+                        type:"post",
+                        dataType: "json",
+                        data:{
 
-                $.each(result, function (key, row) {
+                            "bntUpdate":bntUpdate,
+                            "id" : id,
+                            "pws" : password,
+                            "email" :email
 
-                    $('#userUpdate').attr("placeholder", row["username"]);
-                    $('#pwdUpdate').attr("placeholder", row["password"]);
-                    $('#emailUpdate').attr("placeholder", row["email"]);
+
+                        },
+                        success:function (resultUpdate) {
+                            if($.trim(resultUpdate["true"]!=='')){
+                                $('.toast-body').text(resultUpdate["true"])
+                                $('.toast-body').addClass('bg-success');
+                                $('.toast').toast('show');
+                                setTimeout(function () {
+                                    $('#closeAlert').click();
+                                    refresh();
+                                },3600)
+                                $('.close').click();
+                            }
+                            else if (resultUpdate["false"]!==''){
+                                $('.toast-body').text(resultUpdate["false"])
+                                $('.toast-body').addClass('bg-danger');
+                                $('.toast').toast('show');
+                                setTimeout(function () {
+                                    $('#closeAlert').click();
+                                    refresh();
+                                },3600)
+                                $('.close').click()
 
 
+
+                            }
+
+
+                        }
+
+
+
+                    })
                 })
 
-
-            }
-
+            })
 
         }
-    )
+    })
+
 }
+
+
 
 /***
 @author thanh dep zai
@@ -125,24 +175,31 @@ function deleteRecord(i) {
         $.ajax({
             url:'deleteUsers.php',
             type:"post",
-            dataType:"text",
+            dataType:"json",
             data:{"customDelete":id},
-            success:function (result) {
-                    if (result=="true"){
-                        $('.toast-body').text(id+" was deleted successfully");
-                        $('.close').click();
-                        $('.toast').toast('show');
-                        $('#alert').fadeOut(3600,function () {
-                            refresh();
-                        });
+                success:function (result) {
+                  if($.trim(result["true"]!=='')){
+                      $('.toast-body').text(id + result["true"])
+                      $('.toast-body').addClass('bg-success');
+                      $('.toast').toast('show');
+                      setTimeout(function () {
+                          $('#closeAlert').click();
+                          refresh();
+                      },3600)
+                      $('.close').click();
 
+                  }else if ($.trim(result['false']!=='')){
 
+                      $('.toast-body').text(id + result["false"])
+                      $('.toast-body').addClass('bg-danger');
+                      $('.toast').toast('show');
+                      setTimeout(function () {
+                          $('#closeAlert').click();
+                          refresh();
+                      },1600)
+                      $('.close').click()
 
-                    }else if (result=="false"){
-                        $('.toast-body').text("Something went wrong!");
-                        $('.close').click();
-
-                    }
+                  }
             }
 
 
@@ -228,13 +285,15 @@ function addRegister() {
 
 
          }else if ($.trim(result['success']!=="")){
-
+             $('#notifi').removeClass();
              $('#notifi').text(result['success']);
-             $('#notifi').addClass('text-info')
+             $('#notifi').addClass('text-info');
+
              setTimeout(function () {
                  $('#closeReg').click();
                  refresh();
-             },7200);
+             },1800);
+
 
 
          }
@@ -261,14 +320,18 @@ function addRegister() {
  * vẫn giữ nguyên thông tin đang nhập ở form (BUG = CHỨC NĂNG MỚI  :))
  *
  */
-$('#closeReg').click(function () {
-    console.log("vao day roi");
-    $('#notifi').html('');
-    $('#notifi').removeClass('border-danger');
-    $('#username').val('');
-    $('#password').val('');
-    $('#email').val('');
-})
+function closeDialog(){
+    $('#closeReg').click(function () {
+        $('#notifi').html('');
+        $('#notifi').removeClass();
+        $('#username').val('');
+        $('#password').val('');
+        $('#email').val('');
+    })
+
+
+
+}
 
 /******
  * Refresh()
@@ -295,12 +358,13 @@ function refresh() {
                 // lặp qua danh sách thành viên và tạo html
                 $.each(result['query'], function (key, row) {
                     html += '<tr class="abx'+row["username"]+'">';
+                    html += '<td>' + row['id'] + '</td>';
                     html += '<td>' + row['username'] + '</td>';
                     html += '<td>' + row['password'] + '</td>';
                     html += '<td>' + row['email'] + '</td>';
-                    html += '<td>' + row['level'] + '</td>';
-                    html += '<td class="text-center"><i class=\"fas fa-edit mr-3" id="' + row['username'] + '" data-toggle="modal" data-target="#update" onclick="showUpdate(this)" "></i>' +
-                        '<i class="fas fa-backspace ml-3" id="'+row['username']+'" data-toggle="modal" data-target="#deleteUsers" onclick="deleteRecord(this)" ></i></td>';
+                    html += '<td class="text-center">' + row['level'] + '</td>';
+                    html += '<td class="text-center"><i class=\"fas fa-edit mr-3 update" id="' + row['username'] + '" data-toggle="modal" data-target="#update" onclick="showUpdate(this);"></i>' +
+                        '<i class="fas fa-backspace ml-3 t-del" id="'+row['username']+'" data-toggle="modal" data-target="#deleteUsers" onclick="deleteRecord(this)" ></i></td>';
 
                 });
 
