@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($identity->login()) {
         echo'<script>
-    document.getElementById("status").innerHTML = "dang nhap thanh cong";
+    document.getElementById("status").innerHTML = "Logged in successfully";
     setTimeout("location.reload(true);",1500);
 </script>';
 

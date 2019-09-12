@@ -1,6 +1,5 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="/UXN/apps/media/boostrap/js/load_ajax.js"></script>
 <script src="/UXN/apps/media/boostrap/jquery/jquery-3.4.1.min.js"></script>
 <script src="/UXN/apps/media/boostrap/jquery/jquery-migrate-1.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"

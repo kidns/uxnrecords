@@ -79,7 +79,7 @@ $('#content').on('click', '#div-page a', function() {
  *
  @return hàm này có nhiệm vụ show info hiện tại trước khi update
  được gán vào placeholder cho người dùng nhìn để chỉnh sửa dễ dàng hơn
- (chức năng chưa hoàn thiện)
+ (hoàn thiện chức năng)
  */
 
 
@@ -103,7 +103,8 @@ function showUpdate(i) {
                     var id = row['id'];
                     var password = $('#pwdUpdate').val();
                     var email = $('#emailUpdate').val();
-                    var bntUpdate = $('#bntUpdate').val();
+                    var bntUpdate = $('#bntUpdate').val()
+
                     $.ajax({
                         url:'updateUsers.php',
                         type:"post",

@@ -10,7 +10,16 @@
     class apps_libs_Handling extends apps_libs_Dbconnection
     {
 
-
+        /****
+         * @param $table
+         * @param $other
+         * @param $limit
+         * @param $tab
+         * @return string
+         *
+         * LOAD THÔNG TIN TỪ DATA + PAGINATION
+         * TRẢ VỀ KẾT QUẢ Ở DẠNG JSON.
+         */
 
         public function loading($table, $other, $limit, $tab)
         {
@@ -66,35 +75,12 @@
         }
 
 
-        public function add($table)
-        {
-            $route = new apps_libs_Route();
-            $account = $route->getPOST("username");
-            $password = $route->getPOST("password");
-            $email = $route->getPOST("email");
-            if (isset($_POST['submit'])) {
-
-                $this->buildQueryParams(
-
-                    ["table" => $table,
-                        "field" => "(username, password,email) value (?,?,?)",
-                        "value" => [$account, md5($password), $email]
-
-                    ]
-
-                )->insert();
-
-            }
-
-        }
-
-        /*****
+        /****
          * @param $table
          * @param $where
          * @return string
          *
-         * load info
-         *
+         *GET INFO TỪ MỘT BẢNG CỤ THỂ
          */
 
         public function getInfo($table, $where)
@@ -113,9 +99,14 @@
         }
 
 
-
-
-
+        /****
+         * @param $table
+         * @param $where
+         *
+         *
+         * XÓA THÔNG TIN TỪ 1 BẢNG
+         *
+         */
         public function deleteRecord($table, $where)
         {
             $route = new apps_libs_Route();

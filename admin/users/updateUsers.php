@@ -1,12 +1,5 @@
 <?php
 include_once $_SERVER["DOCUMENT_ROOT"]."../UXN/apps/autoLoad.php";
-class apps_admin_test extends apps_libs_Handling{
-
-
-
-
-
-}
 header('Content-type: application/json');
 $handling = new apps_libs_Handling();
 $query_update = $handling->getInfo("members","username");

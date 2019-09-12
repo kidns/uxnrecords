@@ -193,6 +193,7 @@ if ($ss->isLogin() == false) {
 
     </div>
 
+    <script src="/UXN/apps/media/boostrap/js/load_ajax.js"></script>
 
     <?php
 
