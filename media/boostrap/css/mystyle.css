@@ -1,3 +1,8 @@
+body{
+    background-color: #fdfdfd!important;
+}
+
+
 .page-link{
     text-align: left !important;
 }
@@ -6,4 +11,40 @@ card{
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+}
+.add-art{
+    opacity: 0.9;
+}
+.content-cover{
+    background-color: #000;
+}
+.artist{
+    width: 85%!important;
+}
+
+.img-responsive{
+    object-fit: cover;
+}
+
+.hovereffect {
+    width: 100%;
+    height: auto;
+    float: left;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    cursor: default;
+}
+
+.hovereffect img {
+    display: block;
+    position: relative;
+    -webkit-transition: -webkit-transform 0.35s;
+    transition: transform 0.35s;
+}
+
+.hovereffect:hover img {
+    height: auto;
+    -webkit-transform: translate3d(0,-10%,0);
+    transform: translate3d(0,-10%,0);
 }

@@ -15,12 +15,12 @@ if ($ss->isLogin() == false) {
     }
 
     $test = new apps_libs_Handling();
-    $query = $test->loading("artist", "limit", 18, "index.php");
+    $query = $test->loading("artist", "limit", 16, "index.php");
     include_once "../header.php";
 
 
     ?>
-    <div class="container-fluid p-md-5">
+    <div class="container-fluid artist p-md-5 shadow-sm p-3 mb-5">
 <!--        SHOW DATABASE IN HERE-->
         <div class="row justify-content-between">
             <div class="col-6 text-left"><p class="h3">ARTIST</p></div>
@@ -28,15 +28,16 @@ if ($ss->isLogin() == false) {
                 <span class="fas fa-plus" data-toggle="modal" data-target="#addUsers"></span>
            </div>
         </div>
-        <div class="row justify-content-center mx-auto justify-content-sm-center" id="list">
+        <div class="row justify-content-start mx-auto justify-content-sm-start" id="list">
 
+
+        </div>
+        <div class="container justify-content-center">
             <div class="text-center" id="loading">
                 <div class="spinner-border" role="status" style="width: 3rem;height: 3rem;">
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-
-
         </div>
 
 <!--SHOW PAGINATION-->
@@ -48,10 +49,6 @@ if ($ss->isLogin() == false) {
 
         </div>
 
-
-
-
-
     </div>
 
 
@@ -60,45 +57,48 @@ if ($ss->isLogin() == false) {
     <!-- DIALOG ADD USER-->
     <div class="modal fade" id="addUsers" tabindex="-1">
         <div class="modal-dialog" role="document">
-            <div class="modal-content rounded">
+            <div class="modal-content rounded add-art">
                 <div class="modal-header bg-dark">
                     <h5 class="modal-title text-white" id="exampleModalLabel">ARTIST</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeReg">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_art">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="add.php" method="post" enctype="multipart/form-data">
+                    <form action="" method="post" enctype="multipart/form-data" id="form_art">
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Artist name</label>
-                            <input type="text" class="form-control" id="name_art" name="username"
-                                   required="required"/>
+                            <input type="text" class="form-control" id="name_art" name="username"/>
 
                             <label for="recipient-name" class="col-form-label">Cover:</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="file_cover" name="images" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
-                                <label class="custom-file-label bg-dark text-light" for="customFile">choose cover</label>
+                                <input type="file" class="custom-file-input" id="file_cover" name="images" data-toggle="tooltip" data-placement="right" title="(JPG, PNG, JPEG) MAX: 3M">
+                                <label class="custom-file-label" for="customFile" id="label-file">choose cover</label>
                             </div>
-                            <div class="status alert alert-success mt-2"></div>
+                            <div class="status alert alert-danger mt-2" id="status"></div>
 
                             <label for="recipient-name" class="col-form-label">Booking & manager</label>
                             <textarea class="form-control" id="booking" rows="3"></textarea>
+                            <label for="recipient-name" class="col-form-label">Link stream:</label>
+                            <div class="row">
+                                <div class="col">  <input id="sc_art" type="text" class="form-control" name="soundcloud" placeholder="/souncloud"/></div>
+                                <div class="col"> <input id="fb_art" type="text" class="form-control" name="facebook" placeholder="/facebook"/></div>
+                            </div>
 
-                            <label for="recipient-name" class="col-form-label">Soundcloud link:</label>
-                            <input id="sc_art" type="text" class="form-control" name="cover_art"/>
+                            <div class="row mt-3">
+                                <div class="col"><input id="inst_art" type="text" class="form-control" name="instagram" placeholder="/instagram"/></div>
+                                <div class="col"> <input id="spot_art" type="text" class="form-control" name="spotify" placeholder="/spofity"/></div>
+                            </div>
 
-                            <label for="recipient-name" class="col-form-label">Facebook link:</label>
-                            <input id="fb_art" type="text" class="form-control" name="cover_art"/>
 
-                            <label for="recipient-name" class="col-form-label">Instagram link:</label>
-                            <input id="insta_art" type="text" class="form-control" name="cover_art"/>
 
-                            <label for="recipient-name" class="col-form-label">Twitter link:</label>
-                            <input id="twi_art" type="text" class="form-control" name="cover_art"/>
 
                         </div>
+                        <div class="alert alert-success" id="success_add"></div>
                         <div class="modal-footer">
+
                             <input class="btn btn-success" id="add_artist" type="button" onclick="" value="ADD"/>
+
                         </div>
                     </form>
                 </div>
@@ -145,27 +145,7 @@ if ($ss->isLogin() == false) {
         </div>
     </div>
 
-    <!--    //DIALOG DELETE-->
 
-    <div class="modal fade" id="deleteUsers" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="deleteDialog">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-secondary btn-sm" id="delBnt">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 

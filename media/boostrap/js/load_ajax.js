@@ -172,7 +172,7 @@ function showUpdate(i) {
 function deleteRecord(i) {
     var  id = i.id;
     $('#deleteDialog').html("<p>Are you sure want to delete <kbd> "+id+"</kbd>?</p>")
-    $('#delBnt').click(function () {
+    $('#delBnt').one("click",function () {
         $.ajax({
             url:'deleteUsers.php',
             type:"post",

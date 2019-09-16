@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.8/css/mdb.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/UXN/apps/media/boostrap/css/mystyle.css">
+    <link rel="stylesheet" href="/UXN/apps/media/boostrap/css/jquery-confirm.css">
     <link rel="stylesheet" href="/UXN/apps/media/boostrap/css/bootstrap.min.css">
 
 <body>
