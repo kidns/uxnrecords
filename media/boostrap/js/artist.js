@@ -19,6 +19,7 @@ $(document).ready(function () {
  *
  */
 
+
 $('#content').on('click', '#div-page a', function () {
 
     var url = $(this).attr('href');
@@ -37,7 +38,7 @@ $('#content').on('click', '#div-page a', function () {
 
                     html += '<div class="col-md-3 text-center mb-3 mt-3 col-sm-6">' +
                         '<div class="hovereffect">';
-                    html += '<img class="img-responsive" src="' + row["cover"] + '" style="margin-bottom: -15%;z-index: -1; height: 199px;width: 100%;"  alt="UXN">';
+                    html += '<img class="img-responsive" src="' + row["cover"] + '" style="margin-bottom: -15%;z-index: -1; height: 180px;width: 100%;"  alt="UXN">';
                     html += '<button type="button" class="close text-right sticky-top" aria-label="Close" style="margin-top: -145px; margin-bottom: 70px;">' +
                         '<span id="' + row["id_artist"] + '" aria-hidden="true" onclick="del(this);" class="text-right pr-2">&times;</span></button>';
                     html += ' <div class="content-cover pb-3 pt-3">' + '<p class="card-text text-white font-weight-bold h6 mt-1 mb-1 small text-uppercase">' + row["name_artist"] + '</p>\n' + '</div></div></div>';
@@ -49,7 +50,7 @@ $('#content').on('click', '#div-page a', function () {
                 // Thay đổi nội dung danh sách thành viên
                 $('#list').html(html);
                 if ($('#list').html(html)) {
-                    $('#loading').hide();
+                    $('#loading').fadeOut();
                 }
                 // Thay đổi nội dung phân trang
                 $('#div-page').html(result['paging']);
@@ -96,10 +97,11 @@ function refresh() {
 
                     html += '<div class="col-md-3 text-center mb-3 mt-3 col-sm-6">' +
                         '<div class="hovereffect">';
-                    html += '<img class="img-responsive" src="' + row["cover"] + '" style="margin-bottom: -15%;z-index: -1; height: 199px;width: 100%;"  alt="UXN">';
-                    html += '<button type="button" class="close text-right sticky-top" aria-label="Close" style="margin-top: -145px; margin-bottom: 70px;">' +
+                    html += '<img class="img-responsive" src="' + row["cover"] + '" style="margin-bottom: -15%;z-index: -1; height: 180px;width: 100%;"  alt="UXN">';
+                    html += '<button id="'+row['cover']+'" type="button" class="close text-right sticky-top" aria-label="Close" style="margin-top: -145px; margin-bottom: 70px;">' +
                         '<span id="' + row["id_artist"] + '" aria-hidden="true" onclick="del(this);" class="text-right pr-2">&times;</span></button>';
-                    html += ' <div class="content-cover pb-3 pt-3">' + '<p class="card-text text-white font-weight-bold h6 mt-1 mb-1 small text-uppercase">' + row["name_artist"] + '</p>\n' + '</div></div></div>';
+                    html += ' <div class="content-cover pb-3 pt-3" id="damn">' + '<p onclick="update();" class="card-text text-white font-weight-bold h6 mt-1 mb-1 small text-uppercase">'
+                        + row["name_artist"] + '</p>\n' + '</div></div></div>';
 
 
                 });
@@ -110,7 +112,7 @@ function refresh() {
                 // Thay đổi nội dung danh sách thành viên
                 $('#list').html(html);
                 if ($('#list').html(html)) {
-                    $('#loading').hide();
+                    $('#loading').fadeOut();
                 }
 
                 // Thay đổi nội dung phân trang
@@ -127,7 +129,6 @@ function refresh() {
 
     return false;
 }
-
 
 /**
  *Sự kiện khi click vào button #add-artist
@@ -284,7 +285,6 @@ $(".custom-file-input").on("change", function () {
 function del(span) {
     var id = span.id;
     var name = '';
-
     $.ajax({
         url: 'delete.php',
         type: 'post',
@@ -303,8 +303,8 @@ function del(span) {
                     containerFluid:true,
                     buttons: {
                         yea: {
-                            btnClass:'btn-danger text-white mr-3',
-                            text: 'Yes!',
+                            btnClass:'btn-dark text-white mr-3',
+                            text: 'Yes',
                             action: function () {
 
                                 $.ajax({
@@ -357,7 +357,7 @@ function del(span) {
                         },
                         nope: {
                             text: 'Cancle',
-                            btnClass: 'btn-primary text-white'
+                            btnClass: 'btn-dark text-white'
                         }
 
                     }
@@ -368,4 +368,6 @@ function del(span) {
         }
     });
 }
-
+function update() {
+    alert("ertgknwerkgnekrgh");
+}

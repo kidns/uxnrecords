@@ -20,7 +20,7 @@ if ($ss->isLogin() == false) {
 
 
     ?>
-    <div class="container-fluid artist p-md-5 shadow-sm p-3 mb-5">
+    <div class="container-fluid artist p-md-5 shadow p-3 mb-5">
 <!--        SHOW DATABASE IN HERE-->
         <div class="row justify-content-between">
             <div class="col-6 text-left"><p class="h3">ARTIST</p></div>
