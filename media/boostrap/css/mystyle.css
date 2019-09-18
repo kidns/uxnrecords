@@ -1,28 +1,31 @@
-body{
-    background-color: #fdfdfd!important;
+body {
+    background-color: #fdfdfd !important;
 }
 
-
-.page-link{
+.page-link {
     text-align: left !important;
 }
-card{
+
+card {
 
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
-.add-art{
+
+.add-art {
     opacity: 0.9;
 }
-.content-cover{
+
+.content-cover {
     background-color: #000;
 }
-.artist{
-    width: 76%!important;
+
+.artist {
+    width: 76% !important;
 }
 
-.img-responsive{
+.img-responsive {
     object-fit: cover;
 }
 
@@ -45,6 +48,6 @@ card{
 
 .hovereffect:hover img {
     height: auto;
-    -webkit-transform: translate3d(0,-10%,0);
-    transform: translate3d(0,-10%,0);
+    -webkit-transform: translate3d(0, -10%, 0);
+    transform: translate3d(0, -10%, 0);
 }
