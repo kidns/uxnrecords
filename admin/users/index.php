@@ -8,14 +8,8 @@ if ($ss->isLogin() == false) {
 } else {
 
 
-    class apps_admin_users_managerUsers extends apps_libs_Handling
-    {
-
-
-    }
-
     $test = new apps_libs_Handling();
-    $query = $test->loading("members", "limit", 10, "managerUsers.php");
+    $query = $test->loading("members", "limit", 10, "index.php");
     include_once "../header.php";
 
 

@@ -96,7 +96,7 @@ if($ss->isLogin()==false){
                 $tab = trim(addslashes(htmlspecialchars($_GET['tab'])));
 
                     if($tab==="users"){
-                        include_once 'users/managerUsers.php';
+                        include_once 'users/index.php';
                         echo ' <script>$("#users").addClass("active");</script>';
                     }
 

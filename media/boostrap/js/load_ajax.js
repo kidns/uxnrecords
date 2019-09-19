@@ -89,7 +89,7 @@ function showUpdate(i) {
 
 
     $.ajax({
-        url: 'updateUsers.php',
+        url: 'update.php',
         type: "post",
         dataType: "json",
         data: {"getInfo": customUpdate},
@@ -106,7 +106,7 @@ function showUpdate(i) {
                     var bntUpdate = $('#bntUpdate').val()
 
                     $.ajax({
-                        url:'updateUsers.php',
+                        url:'update.php',
                         type:"post",
                         dataType: "json",
                         data:{
@@ -174,7 +174,7 @@ function deleteRecord(i) {
     $('#deleteDialog').html("<p>Are you sure want to delete <kbd> "+id+"</kbd>?</p>")
     $('#delBnt').one("click",function () {
         $.ajax({
-            url:'deleteUsers.php',
+            url:'delete.php',
             type:"post",
             dataType:"json",
             data:{"customDelete":id},
@@ -263,7 +263,7 @@ function addRegister() {
     }
 
     $.ajax({
-        url:'addUsers.php',
+        url:'add.php',
         type:'post',
         dataType:'json',
         data:{
