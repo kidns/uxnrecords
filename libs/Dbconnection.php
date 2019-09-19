@@ -8,14 +8,13 @@
 class apps_libs_Dbconnection
 {
 
+    protected static $connectionInstance = null;
     protected $usename = "root";
     protected $password = "";
     protected $host = "localhost";
     protected $database = "uxntv";
     protected $queryParams = [];
     protected $tablename;
-    protected static $connectionInstance = null;
-
 
     public function __construct()
     {
@@ -47,35 +46,10 @@ class apps_libs_Dbconnection
 
     }
 
-
-    public function query($sql, $param = [])
-    {
-        $q = $this->connect()->prepare($sql);
-        if (is_array($param) && $param) {
-            ;
-            if ($q->execute($param)){
-                return $q;
-            }else{
-                return false;
-            }
-
-
-        } else {
-            $q->execute();
-            if ($q->execute()){
-                return $q;
-            }else{
-                return false;
-            }
-        }
-
-
-    }
-
     public function buildQueryParams($params)
     {
         $default = [
-            "where"=>"",
+            "where" => "",
             "select" => "*",
             "table" => "",
             "row" => "",
@@ -83,13 +57,39 @@ class apps_libs_Dbconnection
             "params" => "",
             "field" => "",
             "value" => [],
-            "limit"=>"",
-            "space"=>"",
-            "column"=>""
+            "limit" => "",
+            "space" => "",
+            "column" => ""
 
         ];
         $this->queryParams = array_merge($default, $params);
         return $this;
+
+
+    }
+
+    public function selectOne()
+    {
+        $start = "";
+        $limit = "";
+        $this->queryParams["limit"] = "limit 1";
+        $data = $this->select($start, $limit);
+        if ($data) {
+            return $data[0];
+        }
+        return [];
+
+    }
+
+    public function select($start, $limit)
+    {
+
+        $sql = "select " . $this->queryParams["select"] . " from " . $this->tablename . $this->queryParams["table"] . " " . $this->buildCondition($this->queryParams["where"]) . " " . $this->queryParams["other"] . " " .
+            $this->queryParams["limit"] . $start . $this->queryParams["space"] . $limit;
+        $query = $this->query($sql, $this->queryParams["params"]);
+        $show = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $show;
 
 
     }
@@ -102,36 +102,34 @@ class apps_libs_Dbconnection
         return "";
     }
 
-    public function select($start,$limit)
+    public function query($sql, $param = [])
     {
+        $q = $this->connect()->prepare($sql);
+        if (is_array($param) && $param) {
+            ;
+            if ($q->execute($param)) {
+                return $q;
+            } else {
+                return false;
+            }
 
-        $sql = "select " . $this->queryParams["select"] . " from " .$this->tablename.$this->queryParams["table"] ." ".$this->buildCondition($this->queryParams["where"])." ". $this->queryParams["other"] ." ".
-            $this->queryParams["limit"].$start.$this->queryParams["space"].$limit;
-        $query = $this->query($sql, $this->queryParams["params"]);
-        $show = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        return $show;
-
-
-    }
-
-    public function selectOne()
-    {   $start ="";
-        $limit ="";
-        $this->queryParams["limit"] = "limit 1";
-        $data = $this->select($start,$limit);
-        if ($data) {
-            return $data[0];
+        } else {
+            $q->execute();
+            if ($q->execute()) {
+                return $q;
+            } else {
+                return false;
+            }
         }
-        return [];
+
 
     }
-
 
     public function insert($table)
     {
-        $sql = "INSERT INTO " .$table . " ". $this->queryParams['column'] . " VALUES " .$this->queryParams['row'];
-        $result = $this->query($sql,$this->queryParams['params']);
+        $sql = "INSERT INTO " . $table . " " . $this->queryParams['column'] . " VALUES " . $this->queryParams['row'];
+        $result = $this->query($sql, $this->queryParams['params']);
 
         if ($result) {
             $id = $this->connect()->lastInsertId();
@@ -149,18 +147,18 @@ class apps_libs_Dbconnection
 
     public function update($table)
     {
-        $resultUpdate= [
+        $resultUpdate = [
             "true" => '',
-            "false"=>''
+            "false" => ''
         ];
-        $sql = "update " . $table . " set " .$this->queryParams["column"]  . " " .
+        $sql = "update " . $table . " set " . $this->queryParams["column"] . " " .
             $this->buildCondition($this->queryParams["where"]);
-        $result = $this->query($sql,$this->queryParams["params"]);
-        if ($result==false){
-            $resultUpdate["false"].="Something went wrong!";
+        $result = $this->query($sql, $this->queryParams["params"]);
+        if ($result == false) {
+            $resultUpdate["false"] .= "Something went wrong!";
 
-        }else{
-            $resultUpdate["true"].="Successfully updated!";
+        } else {
+            $resultUpdate["true"] .= "Successfully updated!";
         }
 
 
@@ -173,13 +171,21 @@ class apps_libs_Dbconnection
      */
     public function delete($tableDelete)
     {
-        $sql = "DELETE FROM " . $tableDelete . " " . $this->buildCondition($this->queryParams["where"]) . " = '" . $this->queryParams["other"]."'";
+        $sql = "DELETE FROM " . $tableDelete . " " . $this->buildCondition($this->queryParams["where"]) . " = '" . $this->queryParams["other"] . "'";
         $this->query($sql);
-        $query_check = "SELECT * FROM ".$tableDelete." ".$this->buildCondition($this->queryParams['where'])." = '".$this->queryParams['other']."'";
+        $query_check = "SELECT * FROM " . $tableDelete . " " . $this->buildCondition($this->queryParams['where']) . " = '" . $this->queryParams['other'] . "'";
         $result = $this->query($query_check)->rowCount();
-       return $result;
+        return $result;
+    }
 
-
+    /***
+     *
+     * disconnect
+     * @return mixed
+     */
+    public function closeConnect()
+    {
+        return self::$connectionInstance == null;
 
 
     }

@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } else {
         echo '<script>
-    document.getElementById("status").innerHTML = "dang nhap that bai";
+    document.getElementById("status").innerHTML = "Something Wrong";
 </script>';
 
     }

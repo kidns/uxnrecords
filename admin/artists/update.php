@@ -1,9 +1,9 @@
 <?php
 include_once $_SERVER["DOCUMENT_ROOT"] . "../UXN/apps/autoLoad.php";
 $ss = new apps_libs_UserIdentity();
-if($ss->isLogin()==false){
+if ($ss->isLogin() == false) {
 
-}else {
+} else {
 
 
     /**
@@ -18,7 +18,6 @@ if($ss->isLogin()==false){
     $resultInfo = $handing->getInfo("artist", "id_artist");
     echo $resultInfo;
 
-
     $id = $route->getPOST("id_up");
     $name = $route->getPOST("up_name");
     $booking = $route->getPOST("up_booking");
@@ -26,6 +25,12 @@ if($ss->isLogin()==false){
     $fb = $route->getPOST("up_fb_art");
     $inst = $route->getPOST("up_inst_art");
     $spot = $route->getPOST("up_spot_art");
+    $old_file = $route->getPOST("old_file_cover");
+    $result = [
+        'true' => '',
+        'false' => ''
+    ];
+
 
     if ($route->getPOST("bnt_update")) {
         if (empty($_FILES['file'])) {
@@ -45,41 +50,65 @@ if($ss->isLogin()==false){
                 ]
             ])->update("artist");
 
+            echo $query_update;
+            $db->closeConnect();
+
 
         } else {
+
             $target_dir = '../../media/file/img/';
             $target_file = $target_dir . basename($_FILES['file']['name']);
             $type = $_FILES['file']['type'];
-            if ($type === 'image/jpeg' || $type === 'image/jpg' || $type === 'image/png' || $type === 'image/git') {
-                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
-                    $query_update = $db->buildQueryParams([
-                        'column' => 'name_artist=:name,cover=:cover, booking=:booking, sc_art=:sc, fb_art=:fb, inst_art=:inst, spot_art=:spot',
-                        'where' => 'id_artist=:id',
-                        'params' => [
-                            ':id' => $id,
-                            ':name' => $name,
-                            ':booking' => $booking,
-                            ':sc' => $sc,
-                            ':fb' => $fb,
-                            ':inst' => $inst,
-                            ':spot' => $spot,
-                            ':cover' => $target_file
+            if (file_exists($target_file)) {
+                $result['false'] .= 'The file ' . substr($target_file, 21) . ' exists';
+                echo json_encode($result);
+                $db->closeConnect();
 
 
-                        ]
-                    ])->update("artist");
+            } else {
+                if ($type === 'image/jpeg' || $type === 'image/jpg' || $type === 'image/png' || $type === 'image/git') {
+                    if (unlink(realpath($old_file))) {
+                        if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
+                            $query_update = $db->buildQueryParams([
+                                'column' => 'name_artist=:name,cover=:cover, booking=:booking, sc_art=:sc, fb_art=:fb, inst_art=:inst, spot_art=:spot',
+                                'where' => 'id_artist=:id',
+                                'params' => [
+                                    ':id' => $id,
+                                    ':name' => $name,
+                                    ':booking' => $booking,
+                                    ':sc' => $sc,
+                                    ':fb' => $fb,
+                                    ':inst' => $inst,
+                                    ':spot' => $spot,
+                                    ':cover' => $target_file
 
 
-                } else {
-                    die();
+                                ]
+                            ])->update("artist");
+
+                            echo $query_update;
+                            $db->closeConnect();
+
+
+                        } else {
+                            die();
+
+                        }
+
+
+                    }
+
 
                 }
 
+
             }
 
+
         }
-        echo $query_update;
-        die();
+
 
     }
+
+
 }

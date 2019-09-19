@@ -106,7 +106,7 @@ function showUpdate(i) {
                     var bntUpdate = $('#bntUpdate').val()
 
                     $.ajax({
-                        url:'update.php',
+                        url:'update .php',
                         type:"post",
                         dataType: "json",
                         data:{
@@ -364,8 +364,8 @@ function refresh() {
                     html += '<td>' + row['password'] + '</td>';
                     html += '<td>' + row['email'] + '</td>';
                     html += '<td class="text-center">' + row['level'] + '</td>';
-                    html += '<td class="text-center"><i class=\"fas fa-edit mr-3 update" id="' + row['username'] + '" data-toggle="modal" data-target="#update" onclick="showUpdate(this);"></i>' +
-                        '<i class="fas fa-backspace ml-3 t-del" id="'+row['username']+'" data-toggle="modal" data-target="#deleteUsers" onclick="deleteRecord(this)" ></i></td>';
+                    html += '<td class="text-center"><span class="text-center"><i class=\"fas fa-edit mr-xl-3 update" id="' + row['username'] + '" data-toggle="modal" data-target="#update" onclick="showUpdate(this);"></i></span>' +
+                        '<span class="text-center"><i class="fas fa-backspace ml-xl-3 t-del" id="'+row['username']+'" data-toggle="modal" data-target="#deleteUsers" onclick="deleteRecord(this)" ></i></span></td>';
 
                 });
 

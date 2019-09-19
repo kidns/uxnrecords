@@ -82,6 +82,7 @@ include_once "../header.php";
                         <div class="row">
                             <div class="col">
                                 <input id="sc_art" type="text" class="form-control" name="soundcloud"
+                                       data-toggle="tooltip" title="Some tooltip text!"
                                        placeholder="@souncloud"/></div>
                             <div class="col">
                                 <input id="fb_art" type="text" class="form-control" name="facebook"

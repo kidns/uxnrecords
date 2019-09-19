@@ -34,6 +34,10 @@ if($ss->isLogin()==false){
         $result['false'] .= 'Something went wrong!';
 
     } else {
+        if(file_exists($target_file)){
+            $result['false'].='The File ' .substr($target_file,21). ' exists';
+        }else{
+
         $type = $_FILES['file']['type'];
         if ($type === 'image/jpeg' || $type === 'image/jpg' || $type === 'image/png' || $type === 'image/git') {
 
@@ -63,10 +67,10 @@ if($ss->isLogin()==false){
 
 
         } else {
-
             $result['false'] .= 'Something went wrong!';
 
 
+        }
         }
     }
 
