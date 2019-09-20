@@ -100,7 +100,7 @@ function refresh() {
                     html += '<img class="img-responsive" src="' + row["cover"] + '" style="margin-bottom: -15%;z-index: -1; height: 180px;width: 100%;"  alt="UXN">';
                     html += '<button id="' + row['cover'] + '" type="button" class="close text-right sticky-top" aria-label="Close" style="margin-top: -145px; margin-bottom: 70px;">' +
                         '<span id="' + row["id_artist"] + '" aria-hidden="true" onclick="del(this);" class="text-right pr-2">&times;</span></button>';
-                    html += ' <div class="content-cover pb-3 pt-3" id="damn">' + '<p id="' + row['id_artist'] + '" class="card-text text-white font-weight-bold h6 mt-1 mb-1 small text-uppercase">'
+                    html += ' <div class="content-cover pb-3 pt-3" id="damn">' + '<p onclick="update(this);" id="' + row['id_artist'] + '" class="card-text text-white font-weight-bold h6 mt-1 mb-1 small text-uppercase">'
                         + row["name_artist"] + '</p>\n' + '</div></div></div>';
 
 
@@ -338,13 +338,15 @@ function del(span) {
  *
  *
  */
-$(document).on('click', '.card-text', function () {
+function update (p) {
     $('#modal-update-artist').modal({
         show: true
     });
-    var id = $(this).attr("id");
+    var id = p.id;
     var id_artist;
     var old_file_cover;
+    console.log(id);
+    var xhr = new XMLHttpRequest();
 
 
     $.ajax({
@@ -392,102 +394,110 @@ $(document).on('click', '.card-text', function () {
                 $('#up-spot-art').attr('value', $(this).val());
 
             });
+                $('#bnt-update-artist').on('click', function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
 
-            $('#bnt-update-artist').one('click', function () {
-                var up_name = $('#update-name-art').val();
-                var up_booking = $('#update-booking').val();
-                var up_sc_art = 'https://soundcloud.com/' + $('#up-sc-art').val();
-                var up_fb_art = 'https://facebook.com/' + $('#up-fb-art').val();
-                var up_inst_art = 'https://instagram.com/' + $('#up-inst-art').val();
-                var up_spot_art = 'https://spotify.com/' + $('#up-spot-art').val();
-                var bntUpdate = $('#bnt-update-artist').val();
-                if (up_name === '') {
-                    $.alert({
-                        icon: 'far fa-times-circle',
-                        title: 'Warning',
-                        content: 'Enter a valid artist name!',
+                    var up_name = $('#update-name-art').val();
+                    var up_booking = $('#update-booking').val();
+                    var up_sc_art = 'https://soundcloud.com/' + $('#up-sc-art').val();
+                    var up_fb_art = 'https://facebook.com/' + $('#up-fb-art').val();
+                    var up_inst_art = 'https://instagram.com/' + $('#up-inst-art').val();
+                    var up_spot_art = 'https://spotify.com/' + $('#up-spot-art').val();
+                    var bntUpdate = $('#bnt-update-artist').val();
+                    if (up_name === '') {
+                        $.alert({
+                            icon: 'far fa-times-circle',
+                            title: 'Warning',
+                            content: 'Enter a valid artist name!',
 
-                    });
-                } else {
+                        });
+                    } else {
 
-                    $('.update-file-artist input[type="file"]').each(function () {
-                        var form_data = new FormData(this);
-                        if ($(this).val() === '') {
-
-                        } else {
-                            var file_data = $('#update-file_cover').prop('files')[0];
-                            var type = file_data.type;
-                            var size = file_data.size;
-                            var match = ["image/gif", "image/png", "image/jpg", "image/jpeg"];
-
-                            if (type === match[0] && size <= Math.pow(10, 6) || type === match[1] && size <= Math.pow(10, 6) || type === match[2] && size <= Math.pow(10, 6) || type === match[3] && size <= Math.pow(10, 6)) {
-
-                                form_data.append('file', file_data);
+                        $('.update-file-artist input[type="file"]').each(function () {
+                            var form_data = new FormData(this);
+                            if ($(this).val() === '') {
 
                             } else {
-                                $.alert({
-                                    title: 'Failed',
-                                    content: 'Please upload images (maximum: 3MB)'
+                                var file_data = $('#update-file_cover').prop('files')[0];
+                                var type = file_data.type;
+                                var size = file_data.size;
+                                var match = ["image/gif", "image/png", "image/jpg", "image/jpeg"];
 
+                                if (type === match[0] && size <= Math.pow(10, 6) || type === match[1] && size <= Math.pow(10, 6) || type === match[2] && size <= Math.pow(10, 6) || type === match[3] && size <= Math.pow(10, 6)) {
 
-                                })
+                                    form_data.append('file', file_data);
 
-                            }
-                        }
-
-                        form_data.append('id_up', id_artist);
-                        form_data.append('up_name', up_name);
-                        form_data.append('up_booking', up_booking);
-                        form_data.append('up_sc_art', up_sc_art);
-                        form_data.append('up_fb_art', up_fb_art);
-                        form_data.append('up_inst_art', up_inst_art);
-                        form_data.append('up_spot_art', up_spot_art);
-                        form_data.append('old_file_cover', old_file_cover);
-                        form_data.append('bnt_update', bntUpdate);
-                        $.ajax({
-                            url: 'update.php',
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            dataType: 'json',
-                            type: 'post',
-                            data: form_data,
-                            success: function (result) {
-
-                                if (result['true'] !== '') {
-                                    close_dialog();
-                                    $('#close-dialog-update').click();
+                                } else {
                                     $.alert({
-                                        type: 'green',
-                                        title: 'Success!',
-                                        content: result['true']
-                                    })
-                                    refresh();
+                                        title: 'Failed',
+                                        content: 'Please upload images (maximum: 3MB)'
+                                    });
 
 
-                                }else if (result['false'] !== '') {
-                                    $.alert({
-                                        type: 'red',
-                                        title: 'Fail!',
-                                        content: result['false']
-                                    })
 
                                 }
                             }
 
+                            form_data.append('id_up', id_artist);
+                            form_data.append('up_name', up_name);
+                            form_data.append('up_booking', up_booking);
+                            form_data.append('up_sc_art', up_sc_art);
+                            form_data.append('up_fb_art', up_fb_art);
+                            form_data.append('up_inst_art', up_inst_art);
+                            form_data.append('up_spot_art', up_spot_art);
+                            form_data.append('old_file_cover', old_file_cover);
+                            form_data.append('bnt_update', bntUpdate);
+                            $.ajax({
+                                url: 'update.php',
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                dataType: 'json',
+                                type: 'post',
+                                data: form_data,
+                                success: function (result) {
+
+                                    if (result['true'] !== '') {
+                                        close_dialog();
+                                        $('#close-dialog-update').click();
+                                        $.alert({
+                                            type: 'green',
+                                            title: 'Success!',
+                                            content: result['true']
+                                        });
+                                        refresh();
+
+
+                                    }else if (result['false'] !== '') {
+                                        $.alert({
+                                            type: 'red',
+                                            title: 'Fail!',
+                                            content: result['false']
+                                        });
+
+
+                                    }
+
+
+                                }
+
+                            });
+                            return false;
                         })
-                    })
 
 
-                }
+                    }
 
-            })
+                })
+
+
 
         }
     });
 
 
-});
+}
 
 /****
  *
@@ -501,7 +511,14 @@ $(document).on('click', '.card-text', function () {
  * }
  *custom-file-input = custom lại input file upload cho đẹp hơn
  */
-$('#close-dialog-update').click(close_dialog());
+$('#close-dialog-update').click(function () {
+    close_dialog();
+});
+$('#modal-update-artist').on('hidden.bs.modal',function () {
+    close_dialog();
+});
+
+
 $('#status').fadeOut();
 $('#success_add').fadeOut();
 
