@@ -134,6 +134,7 @@ UPDATE DIALOFG
             <div class="modal-body">
                 <form action="" method="post" enctype="multipart/form-data" id="update-form-art">
                     <div class="form-group">
+                        <input type="hidden" class="form-control" id="update-id-art"/>
                         <label for="recipient-name" class="col-form-label">Artist name</label>
                         <input type="text" class="form-control" id="update-name-art"/>
 

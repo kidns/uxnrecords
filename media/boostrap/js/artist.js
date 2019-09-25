@@ -173,7 +173,7 @@ $('#add_artist').on('click', function () {
                 var match = ["image/gif", "image/png", "image/jpg", "image/jpeg"];
                 if (type === match[0] && size <= limit || type === match[1] && size <= limit || type === match[2] && size <= limit || type === match[3] && size <= limit) {
 
-                    var form_data = new FormData(this);
+                    var form_data = new FormData();
                     form_data.append('file', file_data);
                     form_data.append('name', name_art);
                     form_data.append('booking', booking);
@@ -345,10 +345,7 @@ function update(p) {
         show: true
     });
     var id = p.id;
-    var id_artist;
     var old_file_cover;
-    console.log(id);
-    var xhr = new XMLHttpRequest();
 
 
     $.ajax({
@@ -358,7 +355,7 @@ function update(p) {
         data: {'getInfo': id},
         success: function (result) {
             $.each(result, function (key, row) {
-
+                $('#update-id-art').attr('value', row['id_artist']);
                 $('#update-name-art').attr('value', row['name_artist']);
                 $('#update-booking').attr('value', row['booking']);
                 $('#update-label-file').text(row['cover'].slice(21, 70));
@@ -366,11 +363,12 @@ function update(p) {
                 $('#up-fb-art').attr('value', row['fb_art'].slice(21, 70));
                 $('#up-inst-art').attr('value', row['inst_art'].slice(22, 70));
                 $('#up-spot-art').attr('value', row['spot_art'].slice(20, 70));
-                id_artist = row['id_artist'];
                 old_file_cover = row['cover'];
-                console.log(id_artist);
 
             });
+            }
+
+        });
             $('#update-name-art').on('change keyup', function () {
                 $('#update-name-art').attr('value', $(this).val());
 
@@ -399,7 +397,7 @@ function update(p) {
             $('#bnt-update-artist').on('click', function (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-
+                var up_id = $('#update-id-art').val();
                 var up_name = $('#update-name-art').val();
                 var up_booking = $('#update-booking').val();
                 var up_sc_art = 'https://soundcloud.com/' + $('#up-sc-art').val();
@@ -407,6 +405,7 @@ function update(p) {
                 var up_inst_art = 'https://instagram.com/' + $('#up-inst-art').val();
                 var up_spot_art = 'https://spotify.com/' + $('#up-spot-art').val();
                 var bntUpdate = $('#bnt-update-artist').val();
+                console.log(up_id);
                 if (up_name === '') {
                     $.alert({
                         icon: 'far fa-times-circle',
@@ -417,7 +416,7 @@ function update(p) {
                 } else {
 
                     $('.update-file-artist input[type="file"]').each(function () {
-                        var form_data = new FormData(this);
+                        var form_data_update = new FormData();
                         if ($(this).val() === '') {
 
                         } else {
@@ -428,7 +427,7 @@ function update(p) {
 
                             if (type === match[0] && size <= Math.pow(10, 6) || type === match[1] && size <= Math.pow(10, 6) || type === match[2] && size <= Math.pow(10, 6) || type === match[3] && size <= Math.pow(10, 6)) {
 
-                                form_data.append('file', file_data);
+                                form_data_update.append('file', file_data);
 
                             } else {
                                 $.alert({
@@ -439,16 +438,15 @@ function update(p) {
 
                             }
                         }
-
-                        form_data.append('id_up', id_artist);
-                        form_data.append('up_name', up_name);
-                        form_data.append('up_booking', up_booking);
-                        form_data.append('up_sc_art', up_sc_art);
-                        form_data.append('up_fb_art', up_fb_art);
-                        form_data.append('up_inst_art', up_inst_art);
-                        form_data.append('up_spot_art', up_spot_art);
-                        form_data.append('old_file_cover', old_file_cover);
-                        form_data.append('bnt_update', bntUpdate);
+                        form_data_update.append('id_up', up_id);
+                        form_data_update.append('up_name', up_name);
+                        form_data_update.append('up_booking', up_booking);
+                        form_data_update.append('up_sc_art', up_sc_art);
+                        form_data_update.append('up_fb_art', up_fb_art);
+                        form_data_update.append('up_inst_art', up_inst_art);
+                        form_data_update.append('up_spot_art', up_spot_art);
+                        form_data_update.append('old_file_cover', old_file_cover);
+                        form_data_update.append('bnt_update', bntUpdate);
                         $.ajax({
                             url: 'update.php',
                             cache: false,
@@ -456,7 +454,7 @@ function update(p) {
                             processData: false,
                             dataType: 'json',
                             type: 'post',
-                            data: form_data,
+                            data: form_data_update,
                             success: function (result) {
 
                                 if (result['true'] !== '') {
@@ -493,8 +491,8 @@ function update(p) {
             })
 
 
-        }
-    });
+
+
 
 
 }

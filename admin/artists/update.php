@@ -18,27 +18,28 @@ if ($ss->isLogin() == false) {
     $resultInfo = $handing->getInfo("artist", "id_artist");
     echo $resultInfo;
 
-    $id = $route->getPOST("id_up");
-    $name = $route->getPOST("up_name");
-    $booking = $route->getPOST("up_booking");
-    $sc = $route->getPOST("up_sc_art");
-    $fb = $route->getPOST("up_fb_art");
-    $inst = $route->getPOST("up_inst_art");
-    $spot = $route->getPOST("up_spot_art");
-    $old_file = $route->getPOST("old_file_cover");
-    $result = [
-        'true' => '',
-        'false' => ''
-    ];
+
 
 
     if ($route->getPOST("bnt_update")) {
+        $id_up = $route->getPOST("id_up");
+        $name = $route->getPOST("up_name");
+        $booking = $route->getPOST("up_booking");
+        $sc = $route->getPOST("up_sc_art");
+        $fb = $route->getPOST("up_fb_art");
+        $inst = $route->getPOST("up_inst_art");
+        $spot = $route->getPOST("up_spot_art");
+        $old_file = $route->getPOST("old_file_cover");
+        $result = [
+            'true' => '',
+            'false' => ''
+        ];
         if (empty($_FILES['file'])) {
             $query_update = $db->buildQueryParams([
                 'column' => 'name_artist=:name, booking=:booking, sc_art=:sc, fb_art=:fb, inst_art=:inst, spot_art=:spot',
                 'where' => 'id_artist=:id',
                 'params' => [
-                    ':id' => $id,
+                    ':id' => $id_up,
                     ':name' => $name,
                     ':booking' => $booking,
                     ':sc' => $sc,
@@ -73,7 +74,7 @@ if ($ss->isLogin() == false) {
                                 'column' => 'name_artist=:name,cover=:cover, booking=:booking, sc_art=:sc, fb_art=:fb, inst_art=:inst, spot_art=:spot',
                                 'where' => 'id_artist=:id',
                                 'params' => [
-                                    ':id' => $id,
+                                    ':id' => $id_up,
                                     ':name' => $name,
                                     ':booking' => $booking,
                                     ':sc' => $sc,
